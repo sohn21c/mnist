@@ -1,5 +1,5 @@
 ## Hand-written digit recognition with USB camera
-#### _James Sohn_
+#### _[James Sohn (Click to see the portfolio)](http://sohn21c.github.io)_
 #### _Jan 2019_
 
 ## This project is on-going!
