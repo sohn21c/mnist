@@ -44,7 +44,7 @@ loaded_model.compile(loss = 'sparse_categorical_crossentropy', optimizer = 'adam
 # initilize the video stream
 print ("[INFO] Starting video stream...")
 vs = VideoStream(src=2).start()
-time.sleep(2.0)
+time.sleep(1.0)
 fps = FPS().start()
 
 # loop over the frames from the video stream
@@ -71,8 +71,8 @@ while True:
 	# show the original image and the edge detected image
 	# print ("Step 1: Edge detection")
 
-	cv2.imshow("Frame", frame)
-	cv2.imshow("Edged", edged)
+	# cv2.imshow("Frame", frame)
+	# cv2.imshow("Edged", edged)
 	
 
 	##### Find the Contour
@@ -143,8 +143,8 @@ while True:
 	# show the original and scanned image
 	# print ("Step 3: Apply perspective transform")
 	cv2.imshow("Warped", warped)
-	cv2.imshow("Cropped", cropped)
-	cv2.imshow("Outline", frame2)
+	# cv2.imshow("Cropped", cropped)
+	# cv2.imshow("Outline", frame2)
 
 	
 	##### Image prediction
