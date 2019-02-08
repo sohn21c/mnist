@@ -10,6 +10,11 @@ The video below shows the demo of recognizing the hand-written number on the sti
 [![YouTube](https://github.com/sohn21c/mnist/blob/master/img/video_thumbnail.jpg?raw=true)](https://youtu.be/ipuE6w1iIO4)  
 
 ## Software
+
+#### Realtime USB camera hand-written digit scanner
+`realtime_eval.py`: This standalone script can be run on python(3.6.8) without any argument. Trained model from the software listed above is imported to the script and video feed activates with the 1s delay. One should specify their usb port for camera source (0 for built-in webcam and 1 or 2 for external usb).  
+The softwrae uses `openCV` library to convert the RGB image to GRAY, detects the edges of the paper, extracts area inside and transforms it to up-right image. Then it processes the pixel intensity and image format to match the MNIST data set for the evaluation.  
+  
 #### Convolutional Neural Network training  
 `mnist_digit.ipynb`: Full blown trainig with visualization usign Keras API. Evaluation on test set achives higher than 99% accuracy. Model layout used for the training is as shown in the picture below.  
 ![img](https://github.com/sohn21c/mnist/blob/master/img/training_model.jpg?raw=true)   
@@ -22,10 +27,6 @@ Training evaluation is visualized as seen below.
 
 `mnist_fashion.ipynb`: _(Not related to the project)_ MNIST fashion data was used for the slightly more complicated setup of CNN training for a proof of concept.  
 
-#### Realtime USB camera hand-written digit scanner
-`realtime_eval.py`: This standalone script can be run on python(3.6.8) without any argument. Trained model from the software listed above is imported to the script and video feed activates with the 1s delay. One should specify their usb port for camera source (0 for built-in webcam and 1 or 2 for external usb).  
-The softwrae uses `openCV` library to convert the RGB image to GRAY, detects the edges of the paper, extracts area inside and transforms it to up-right image. Then it processes the pixel intensity and image format to match the MNIST data set for the evaluation.  
-  
 #### Function scripts  
 `plotter.py`: Visualization tools built with `matplotlib.pyplot` and `numpy`. It plots the image and the evaluation side by side.  
 
