@@ -30,7 +30,6 @@ def order_points(pts):
 
 def four_point_transform(image, pts):
 	rect = order_points(pts)
-	print("Contour coordinates\n", rect)
 	(tl, tr, br, bl) = rect
 
 	# find the width

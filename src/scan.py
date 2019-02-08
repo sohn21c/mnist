@@ -33,8 +33,6 @@ print ("Step 1: Edge detection")
 
 cv2.imshow("Image", image)
 cv2.imshow("Edged", edged)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
 
 
 
@@ -64,7 +62,6 @@ cv2.imshow("Outline", image)
 
 
 
-
 ### Transform to bird-eye view
 
 # apply the four point transform to obtain a top-down view of the original image
@@ -73,20 +70,24 @@ warped = four_point_transform(orig, screenCnt.reshape(4,2) * ratio)
 # convert the warped image to grayscale, then threshold it to give it that 'black and white' paper effect
 warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
 resizeWarped = imutils.resize(warped, height = 28)
-print ("Pixel size of resized scan", resizeWarped.shape)
+
+# thresholded image
 T = threshold_local(warped, 201, offset = 10, method = "gaussian")
 T2 = threshold_local(resizeWarped, 9, offset = 10, method = "gaussian")
 warped = (warped > T).astype("uint8") * 255
 resizeWarped = (resizeWarped > T2).astype("uint8") * 255
 
-
 # show the original and scanned image
 print ("Step 3: Apply perspective transform")
 # cv2.imshow("Original", imutils.resize(orig, height = 650))
-cv2.imshow("Scanned", imutils.resize(warped, height = 650))
-cv2.imshow("Resized", imutils.resize(resizeWarped, height = 650))
-cv2.imwrite("saved1.jpg", imutils.resize(warped, height = 650))
-print ("img saved")
+cv2.imshow("Scanned", imutils.resize(warped, height = 200))
+cv2.imshow("Resized", imutils.resize(resizeWarped, height = 200))
+
+# save the image
+# cv2.imwrite("saved1.jpg", imutils.resize(warped, height = 650))
+# print ("img saved")
+
+# abort the script
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
