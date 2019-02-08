@@ -6,7 +6,7 @@
 To build a system to recognize hand-written digit on the paper with usb camera. Convolutional Neural Network model is to used to train the MNIST digit data set with Keras API with TensorFlow backend.  
 
 ## Video demonstration
-The video below shows the demo of recognizing the hand-written number on the sticky with the usb camera. 
+The video below shows the demo of recognizing the hand-written number on the sticky with the usb camera.  
 [![YouTube](https://github.com/sohn21c/mnist/blob/master/img/video_thumbnail.jpg?raw=true)](https://youtu.be/ipuE6w1iIO4)  
 
 ## Software
@@ -27,14 +27,23 @@ Training evaluation is visualized as seen below.
 The softwrae uses `openCV` library to convert the RGB image to GRAY, detects the edges of the paper, extracts area inside and transforms it to up-right image. Then it processes the pixel intensity and image format to match the MNIST data set for the evaluation.  
   
 #### Function scripts  
-`plotter.py`
+`plotter.py`: Visualization tools built with `matplotlib.pyplot` and `numpy`. It plots the image and the evaluation side by side.  
+
+`transform.py`: Image transformation tool to accept input of 4 points in contour, rearranges them in right order, performs PerspectiveTransform with OpenCV.  
+  
+> `scan.py`: Script that uses the functions listed in the `transform.py` to process the still image. Try `>python scan.py --help` for necessary arugments.  
+![img](https://github.com/sohn21c/mnist/blob/master/img/scan_py_sample.jpg?raw=true)
 
   
 
 ## Hardware
 Logitech 720p USB camera
 
-## Reference
-dddd
-## License
+## Reference/Credit
+CNN training scripts are based on official Keras training material that can be found on [link](https://www.tensorflow.org/tutorials/)
+
+`scan.py` source code is credited to [Pyimagesearch](https://www.pyimagesearch.com/)  
+
+## License  
+Lincese added to `realtime_eval.py`. 
 
