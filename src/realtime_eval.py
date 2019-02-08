@@ -18,12 +18,12 @@ import random
 
 
 ################## Training Model ##############################
-# load the data
-(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+# # load the data
+# (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 
-# reshaping data to keras API
-x_train = x_train.reshape(x_train.shape[0], 28, 28, 1)
-x_test = x_test.reshape(x_test.shape[0], 28, 28, 1)
+# # reshaping data to keras API
+# x_train = x_train.reshape(x_train.shape[0], 28, 28, 1)
+# x_test = x_test.reshape(x_test.shape[0], 28, 28, 1)
 
 # load weights into new model
 json_file = open('model.json', 'r')
@@ -40,8 +40,6 @@ loaded_model.compile(loss = 'sparse_categorical_crossentropy', optimizer = 'adam
 
 
 
-
-
 ################## Video Feed ##################################
 # initilize the video stream
 print ("[INFO] Starting video stream...")
@@ -49,11 +47,9 @@ vs = VideoStream(src=2).start()
 time.sleep(2.0)
 fps = FPS().start()
 
-
-
-
 # loop over the frames from the video stream
 while True:
+
 	##### Video capture and edge detection
 	# capture the frame from the video stream and resize it to 400 pixel
 	frame = vs.read()
@@ -79,8 +75,6 @@ while True:
 	cv2.imshow("Edged", edged)
 	
 
-
-
 	##### Find the Contour
 	# find the contours in the edged image, keeping only the largest ones, and initialize the screen contour
 	cnts = cv2.findContours(edged.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
@@ -88,6 +82,8 @@ while True:
 	cnts = sorted(cnts, key = cv2.contourArea, reverse = True)[:5]
 
 	# loop opver the contours
+	
+	flag = False 		# safety flag
 	for c in cnts:
 		# approximate the contour
 		peri = cv2.arcLength(c, True)
@@ -96,15 +92,18 @@ while True:
 		# if our approximated contour has four points, then we can assume that we have found our screen
 		if len(approx) == 4:
 			screenCnt = approx
+			flag = True 
 			break
+	# if 4 contours don't exist, go to the top of the loop
+	if flag == False:	# safety flag
+		continue		
+	
 
 	# show the contour (outline) of the piece of paper
 	# print ("Step 2: Find contours of paper")
 
 	cv2.drawContours(frame2, [screenCnt], -11, (0, 255, 0), 2)
-	cv2.imshow("Outline", frame2)
-
-
+	# cv2.imshow("Outline", frame2)
 
 
 	##### Image transform
@@ -132,25 +131,38 @@ while True:
 	# crop the image
 	cropped = resizeWarped[2:30, 2:30]
 
+	# put another safety flag
+	flag = False 
+
+	if cropped.shape[0] == 28 and cropped.shape[1] == 28:
+		flag = True
+
+	if flag == False:
+		continue
+
 	# show the original and scanned image
 	# print ("Step 3: Apply perspective transform")
-
 	cv2.imshow("Warped", warped)
 	cv2.imshow("Cropped", cropped)
-	print (cropped)
+	cv2.imshow("Outline", frame2)
 
 	
-	
-
-
 	##### Image prediction
-	# resizeWarped = resizeWarped.reshape(28,28)
-	# pred = loaded_model.predict(resizeWarped)
+	# array format change conforming keras input format
+	cropped = np.expand_dims(cropped, axis=0)
+	cropped = np.expand_dims(cropped, axis=3)
+	cropped = cropped.astype('float32')
+	cropped /= 255	
 
-
-
-
-
+	# predict the hand-digit number using trained model
+	pred = loaded_model.predict(cropped)	
+	pred_label = np.argmax(pred)
+	print ("Prediction:", pred)
+	
+	# add label on the screen
+	text_label = "{:}: {:.2f}%".format(pred_label, pred[0][pred_label] * 100)
+	cv2.putText(frame2, text_label, (screenCnt[0][0][0],screenCnt[0][0][1]), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+	cv2.imshow("Outline", frame2)
 
 
 	##### Abort the video
@@ -160,9 +172,11 @@ while True:
 		break
 	fps.update()
 
+
 fps.stop()
 print ("[INFO] elapsed time: {:.2f}".format(fps.elapsed()))
 print ("[INFO] approx. FPS: {:.2f}".format(fps.fps()))
+
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
